@@ -1,0 +1,13 @@
+[endpoint_config]
+api_url = "http://localhost:8000/v1"
+health_url = "http://localhost:8000/health"
+model = "datalab-to/surya-ocr-2"
+
+request_timeout_seconds = 600.0
+health_timeout_seconds = 30.0
+health_interval_seconds = 1.0
+retry_backoff_seconds = 1.5
+
+max_tokens = 12288
+temperature = 0.0
+top_p = 0.1
