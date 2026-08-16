@@ -1,0 +1,6 @@
+__pycache__/
+*.py[cod]
+llama.cpp
+surya-ocr-2-gguf
+llama.cpp
+.direnv

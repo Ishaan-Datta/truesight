@@ -1,0 +1,10 @@
+[project]
+name = "truesight"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "datetime>=6.0",
+    "pathlib>=1.0.1",
+]
