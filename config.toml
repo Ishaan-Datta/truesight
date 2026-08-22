@@ -1,14 +1,14 @@
 [capture]
 picture_directory = "/tmp"
-confidence_threshold = 0.5
+confidence_threshold = 0.7
 
 [endpoint_config]
 api_url = "http://localhost:8000/v1"
 health_url = "http://localhost:8000/health"
 model = "datalab-to/surya-ocr-2"
 
-request_timeout_seconds = 600.0
-health_timeout_seconds = 30.0
+request_timeout_seconds = 15.0
+health_timeout_seconds = 5.0
 health_interval_seconds = 1.0
 retry_backoff_seconds = 1.5
 

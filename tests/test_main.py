@@ -4,8 +4,13 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
-from surya_slim import BlockOCRResult, ConfigError, PageOCRResult
-from truesight import CaptureConfig, check_niri_ipc, extract_output
+from surya_slim import BlockOCRResult, ConfigError, FailureContext, PageOCRResult
+from truesight import (
+    CaptureConfig,
+    check_niri_ipc,
+    extract_output,
+    report_ocr_failure,
+)
 
 
 class CaptureConfigTests(unittest.TestCase):
@@ -63,6 +68,32 @@ class NiriCheckTests(unittest.TestCase):
 
         with self.assertRaisesRegex(RuntimeError, "socket unavailable"):
             check_niri_ipc()
+
+
+class FailureNotificationTests(unittest.TestCase):
+    @patch("truesight.print")
+    @patch("truesight.subprocess.run")
+    @patch("truesight.shutil.which", return_value="/usr/bin/notify-send")
+    def test_notifies_user_of_ocr_failure(self, _which, run, _print) -> None:
+        report_ocr_failure(
+            FailureContext(
+                stage="inference",
+                attempts=2,
+                error=RuntimeError("server disconnected"),
+                api_url="http://localhost:8000/v1",
+                model="surya",
+            )
+        )
+
+        run.assert_called_once_with(
+            [
+                "notify-send",
+                "Truesight OCR failed",
+                "Inference failed: server disconnected",
+            ],
+            check=True,
+            timeout=5,
+        )
 
 
 class OutputFilterTests(unittest.TestCase):

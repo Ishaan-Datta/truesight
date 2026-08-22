@@ -86,9 +86,16 @@ def check_niri_ipc() -> None:
 
 
 def report_ocr_failure(context: FailureContext) -> None:
+    message = f"{context.stage.capitalize()} failed: {context.error}"
     print(
         f"OCR failed after {context.attempts} attempts: {context.error}",
         file=sys.stderr,
+    )
+    require_program("notify-send")
+    subprocess.run(
+        ["notify-send", "Truesight OCR failed", message],
+        check=True,
+        timeout=5,
     )
 
 
