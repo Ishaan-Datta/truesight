@@ -36,9 +36,9 @@
     }:
     let
       overlay = final: prev: {
-        # desktop-reminder-system = final.callPackage ./nix/package.nix {
-        #   inherit uv2nix pyproject-nix pyproject-build-systems;
-        # };
+        truesight = final.callPackage ./nix/package.nix {
+          inherit uv2nix pyproject-nix pyproject-build-systems;
+        };
       };
     in
     {
@@ -53,20 +53,24 @@
         };
       in
       {
-        # packages.default = pkgs.desktop-reminder-system;
-        # packages.desktop-reminder-system = pkgs.desktop-reminder-system;
+        packages.default = pkgs.truesight;
+        packages.truesight = pkgs.truesight;
 
-        # apps.default = {
-        #   type = "app";
-        #   program = "${pkgs.desktop-reminder-system}/bin/desktop-reminder-system";
-        # };
-        # apps.desktop-reminder-system = self.apps.${system}.default;
+        apps.default = {
+          type = "app";
+          program = "${pkgs.truesight}/bin/truesight";
+          meta.description = "Capture a screenshot and extract its text with Surya OCR";
+        };
+        apps.truesight = self.apps.${system}.default;
 
         devShells.default = pkgs.mkShell {
           packages = [
             pkgs.python312
             pkgs.ruff
             pkgs.uv
+            pkgs.niri
+            pkgs.wl-clipboard
+            pkgs.libnotify
           ];
 
           shellHook = ''

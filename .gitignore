@@ -1,5 +1,8 @@
 __pycache__/
 *.py[cod]
+build/
+dist/
+*.egg-info/
 llama.cpp
 surya-ocr-2-gguf
 llama.cpp

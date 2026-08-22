@@ -5,6 +5,20 @@ Surya OCR 2 server. The project-local `surya_slim` package supports both vLLM
 and llama.cpp through their OpenAI-compatible HTTP APIs. It does not install,
 start, stop, or otherwise manage an inference server.
 
+## Installation
+
+Build or run the Nix package directly from the repository:
+
+```bash
+nix build
+nix run -- --config ./config.toml
+```
+
+The package supplies the `niri`, `wl-copy`, and `notify-send` commands used at
+runtime. A `truesight` console script is also installed by the Python package.
+
+<!-- TODO: need to add example of adding to the configuration, like desktop-reminder-system.. -->
+
 ## Configuration
 
 Pass the configuration file explicitly:
@@ -59,33 +73,6 @@ TRUESIGHT_TOP_P
 Per-field precedence is an explicitly constructed `EndpointConfig`, then the
 supplied TOML file, then environment variables, then defaults. Prefer the
 environment for `TRUESIGHT_API_KEY` so credentials do not enter source control.
-
-## Library API
-
-```python
-from PIL import Image
-
-from surya_slim import EndpointConfig, ocr_image
-
-config = EndpointConfig.from_toml("./config.toml")
-with Image.open("screenshot.png") as image:
-    result = ocr_image(image, config=config)
-
-print(result.confidence)
-for block in result.blocks:
-    print(block.label, block.bbox, block.html)
-```
-
-`PageOCRResult.confidence` is the mean probability derived from completion token
-logprobs. Logprobs are always requested because the OpenAI-compatible protocol
-has no standard overall-confidence field. Confidence is `None` if the server
-does not return token logprobs. It is page-wide and is deliberately not present
-on `BlockOCRResult`.
-
-Before OCR, the client polls `/health` and discovers the served model through
-`/v1/models`. OCR is attempted at most twice. A caller may provide an
-`on_second_failure` callback for notification; the second error is always raised
-after the callback returns.
 
 The client adapts the full-page OCR prompt, image normalization, label mapping,
 and HTML parsing behavior from the Apache-2.0 licensed
