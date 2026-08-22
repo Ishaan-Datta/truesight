@@ -14,6 +14,10 @@ uv run python main.py --config ./config.toml
 ```
 
 ```toml
+[capture]
+picture_directory = "/tmp"
+confidence_threshold = 0.5
+
 [endpoint_config]
 api_url = "http://localhost:8000/v1"
 health_url = "http://localhost:8000/health"
@@ -28,6 +32,11 @@ max_tokens = 12288
 temperature = 0.0
 top_p = 0.1
 ```
+
+Screenshots are written to `picture_directory`, which defaults to `/tmp` when
+the `[capture]` table or setting is omitted. OCR HTML is printed and copied to the
+Wayland clipboard with `wl-copy` only when page confidence meets
+`confidence_threshold`. A response without confidence is rejected.
 
 The package never searches for a configuration file. Environment variables are
 used when no file is passed, or as lower-priority fallbacks for settings omitted

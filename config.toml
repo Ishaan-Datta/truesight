@@ -1,3 +1,7 @@
+[capture]
+picture_directory = "/tmp"
+confidence_threshold = 0.5
+
 [endpoint_config]
 api_url = "http://localhost:8000/v1"
 health_url = "http://localhost:8000/health"
